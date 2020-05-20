@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AJAX GET to JSON Placeholder</title>
+	</head>
+	<body>
+		<button id="user">Get user</button>
+		<div id="container-user"></div>
+		<hr />
+
+		<button id="users">Get users</button>
+		<div id="container-users"></div>
+
+		<script>
+			// Grab elements
+			const userBtn = document.querySelector('#user');
+			const usersBtn = document.querySelector('#users');
+			let url;
+			let element;
+
+			function getUser() {
+				url = 'https://jsonplaceholder.typicode.com/users/1';
+				element = document.querySelector('#container-user');
+
+				useAjaxRequest();
+			}
+
+			function getUsers() {
+				url = 'https://jsonplaceholder.typicode.com/users';
+				element = document.querySelector('#container-users');
+
+				useAjaxRequest();
+			}
+
+			function useAjaxRequest() {
+				// Create xhr object
+				let xhr = new XMLHttpRequest();
+				console.log(url, element);
+				// Send a GET request to the api asynchronously
+				xhr.open('GET', url, true);
+
+				// Define what to do with the response from the api
+				xhr.onload = function () {
+					if (this.status == 200) {
+						displayUsers(this.response);
+					} else if ((this.status = 404)) {
+						console.log('Error on GET request');
+						element.innerHTML = 'Not Found';
+					}
+				};
+
+				// Send request to api
+				xhr.send();
+			}
+
+			function displayUsers(response) {
+				// Parse the response to json - object
+				let json = JSON.parse(response);
+				// Store the divs with names
+				let output = '';
+
+				// Loop through each entry in the object
+				for (let i in json) {
+					// To get the name of 1 user, only add if the property is name
+					if (json[i].name) {
+						output += `<div>${json[i].name}</div>`;
+					}
+				}
+
+				// Add to screen
+				element.innerHTML = output;
+			}
+
+			userBtn.addEventListener('click', getUser);
+			usersBtn.addEventListener('click', getUsers);
+		</script>
+	</body>
+</html>

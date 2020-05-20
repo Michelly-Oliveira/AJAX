@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>AJAX PUT to JSON Placeholder</title>
+	</head>
+	<body>
+		<form id="post">
+			<input type="text" name="title" id="title" placeholder="Enter title" />
+			<br />
+			<textarea name="content" id="content" cols="30" rows="10"></textarea>
+		</form>
+		<br />
+		<button id="btn">Update First Post</button>
+
+		<script>
+			// Grab elements from screen
+			let title = document.querySelector('#title');
+			let content = document.querySelector('#content');
+			let btn = document.querySelector('#btn');
+
+			function sendAJAX() {
+				// Create the xhr object
+				let xhr = new XMLHttpRequest();
+				// Create the body of the post
+				let post = {
+					title: title.value,
+					body: content.value,
+					userId: 1,
+				};
+
+				// Send a POST request to the url asynchronously
+				xhr.open('PUT', 'https://jsonplaceholder.typicode.com/posts/1', true);
+
+				// Add this headers to the request
+				xhr.setRequestHeader('Content-type', 'application/json; charset=UTF-8');
+
+				// Define function to handle response from xhr
+				xhr.onload = function () {
+					if (this.status === 204 || this.status === 200 || this.status === 202) {
+						console.log(this.response);
+						alert('Post successfully updated on API');
+					} else if (this.status === 400 || this.status === 404) {
+						alert('Error! Could not update post');
+					}
+				};
+
+				// Send request with data to the api
+				xhr.send(JSON.stringify(post));
+			}
+
+			// When click on the btn send request to create a post to the api
+			btn.addEventListener('click', sendAJAX);
+		</script>
+	</body>
+</html>
